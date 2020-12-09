@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,8 +13,10 @@ public class Main {
 
     final private static String GUITAR_DATABASE_FILENAME = "data/database.csv";
 
+    private static List<Guitar> guitarList;
+
     public static void main(String[] args) {
-        List<Guitar> guitarList = new ArrayList<>();
+        guitarList = new ArrayList<Guitar>();
 
         try (Scanner sc = new Scanner(new File(GUITAR_DATABASE_FILENAME))) {
             while (sc.hasNext()) {
@@ -25,21 +28,28 @@ public class Main {
         }
 
         ///get all the guitars that were manufactured by "adams"(filter)
-        guitarList.stream().filter(o -> o.getManufacturer().equalsIgnoreCase("adams")).forEach(System.out::println);
+        Function<String, Stream> findByManufacturer =
+                str->guitarList.stream().filter(o -> o.getManufacturer().equalsIgnoreCase(str));
+        findByManufacturer.apply("adams").forEach(System.out::println);
+        System.out.print("\n");
 
         ///find biggest price(map, reduce)
         int maxPrice = guitarList.stream().map(Guitar::getCost).reduce(Integer::max).orElse(-1);
         System.out.println("maxPrice = " + maxPrice);
+        System.out.print("\n");
 
         ///map of manufacturers and models(toMap)
         Map<String, String> map = guitarList.stream().collect(Collectors.toMap(Guitar::getModel,Guitar::getManufacturer));
         System.out.println(map);
+        System.out.print("\n");
 
         ///find first in stream(findFirst)
         System.out.println(guitarList.stream().findFirst().orElse(null));
+        System.out.print("\n");
 
         ///find any in stream(findAny)
         System.out.println(guitarList.stream().findAny().orElse(null));
+        System.out.print("\n");
 
         ///tries to find fender(anyMatch)
         if(guitarList.stream().anyMatch(o->o.getManufacturer().equals("fender"))){
@@ -48,10 +58,11 @@ public class Main {
         else{
             System.out.println("fender not found!");
         }
+        System.out.print("\n");
 
         ///group guitars by manufacturer(groupingBy)
         System.out.println(guitarList.stream().collect(Collectors.groupingBy(Guitar::getManufacturer)));
-
+        System.out.print("\n");
 
     }
 }
