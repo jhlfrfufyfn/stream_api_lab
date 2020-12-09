@@ -15,6 +15,11 @@ public class Main {
 
     private static List<Guitar> guitarList;
 
+    private static Stream findByManufacturer(String str){
+        return guitarList.stream().filter(o -> o.getManufacturer().equalsIgnoreCase(str));
+    }
+
+
     public static void main(String[] args) {
         guitarList = new ArrayList<Guitar>();
 
@@ -28,9 +33,7 @@ public class Main {
         }
 
         ///get all the guitars that were manufactured by "adams"(filter)
-        Function<String, Stream> findByManufacturer =
-                str->guitarList.stream().filter(o -> o.getManufacturer().equalsIgnoreCase(str));
-        findByManufacturer.apply("adams").forEach(System.out::println);
+        findByManufacturer("adams").forEach(System.out::println);
         System.out.print("\n");
 
         ///find biggest price(map, reduce)
@@ -65,4 +68,5 @@ public class Main {
         System.out.print("\n");
 
     }
+
 }
